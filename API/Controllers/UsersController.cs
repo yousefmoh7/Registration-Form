@@ -7,15 +7,16 @@ using System.Threading.Tasks;
 namespace API.Controllers
 {
     [ApiController]
-    [Route("[users]")]
+    [Route("api/users")]
+
     public class UsersController : ControllerBase
     {
 
-        private readonly UserService _service;
+        private readonly IUserService _service;
         private readonly ILogger<UsersController> _logger;
 
         public UsersController(ILogger<UsersController> logger
-            , UserService service)
+            , IUserService service)
         {
             _service = service;
             _logger = logger;
@@ -24,7 +25,7 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] AddUserRequest request)
         {
-            var users = await _service.AddNewAsync(request);
+            var users = await _service.AddNewUser(request);
             return Ok(users);
         }
     }

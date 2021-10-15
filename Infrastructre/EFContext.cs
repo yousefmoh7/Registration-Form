@@ -1,4 +1,5 @@
-﻿using Domain.Users;
+﻿using Domain.Departments;
+using Domain.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data
@@ -12,6 +13,7 @@ namespace Infrastructure.Data
         }
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Company> Companies { get; set; }
 
     }
 }

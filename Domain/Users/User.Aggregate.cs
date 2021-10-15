@@ -18,10 +18,5 @@ namespace Domain.Users
             CompanyId = companyId;
         }
 
-        public void AddDepartment(int companyId)
-        {
-            CompanyId = companyId;
-        }
-
     }
 }

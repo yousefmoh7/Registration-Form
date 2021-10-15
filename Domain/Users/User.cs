@@ -13,7 +13,7 @@ namespace Domain.Users
             , string password
             , int companyId)
         {
-            this.Update(Name, address, email, password,companyId);
+            this.Update(name, address, email, password,companyId);
         }
 
         public string Name { get; private set; }
@@ -21,7 +21,6 @@ namespace Domain.Users
         public string Password { get; private set; }
         public string Address { get; private set; }
         public int CompanyId { get; private set; }
-
         public virtual Company Company { get; private set; }
     }
 }

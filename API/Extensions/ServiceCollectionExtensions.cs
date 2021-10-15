@@ -35,7 +35,8 @@ namespace API.Extensions
            )
         {
             return services
-                .AddScoped<UserService>();
+                .AddScoped<IUserService,UserService>()
+                .AddScoped<ICompanyService, CompanyService>();
         }
     }
 }

@@ -5,20 +5,26 @@ using System.Threading.Tasks;
 
 namespace API.Services.Users
 {
-    public class UserService : BaseService
+    public interface IUserService
+    {
+        public Task<AddUserResponse> AddNewUser(AddUserRequest model);
+    }
+
+    public class UserService : BaseService,IUserService
     {
         public UserService(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
         }
 
-        public async Task<AddUserResponse> AddNewAsync(AddUserRequest model)
+       
+
+        public async Task<AddUserResponse> AddNewUser(AddUserRequest model)
         {
-            
-        var user = new User(model.Name
+            var user = new User(model.Name
                 , model.Email
                 , model.Address
                 , model.Password
-                , model.CompanyId.Value);
+                , model.CompanyId);
 
             var repository = UnitOfWork.AsyncRepository<User>();
             await repository.AddAsync(user);
@@ -32,6 +38,5 @@ namespace API.Services.Users
 
             return response;
         }
-
     }
 }

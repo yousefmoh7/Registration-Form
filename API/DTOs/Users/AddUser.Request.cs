@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace API.DTOs.Users
 {
@@ -9,7 +8,6 @@ namespace API.DTOs.Users
         [StringLength(50)]
         public string Name { get; set; }
 
-  
         [Required]
         [StringLength(50)]
         public string Email { get; set; }
@@ -22,6 +20,6 @@ namespace API.DTOs.Users
         public string Address { get; set; }
 
         [Required]
-        public int? CompanyId { get; set; }
+        public int CompanyId { get; set; }
     }
 }
