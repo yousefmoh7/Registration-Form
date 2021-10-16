@@ -28,5 +28,19 @@ namespace API.Controllers
             var users = await _service.AddNewUser(request);
             return Ok(users);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Get([FromQuery] GetUserRequest request)
+        {
+            var users = await _service.SearchAsync(request);
+            return Ok(users);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var user = await _service.GetUser(id);
+            return Ok(user);
+        }
     }
 }

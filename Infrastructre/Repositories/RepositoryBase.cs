@@ -35,6 +35,11 @@ namespace Infrastructure.Data.Repositories
             return _dbSet.FirstOrDefaultAsync(expression);
         }
 
+        public async Task<T> GetAsyncById(int id)
+        {
+            return await _dbSet.FindAsync(id);
+        }
+
         public Task<List<T>> ListAsync(Expression<Func<T, bool>> expression)
         {
             return _dbSet.Where(expression).ToListAsync();

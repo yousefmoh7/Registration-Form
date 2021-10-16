@@ -1,6 +1,8 @@
 ﻿using API.DTOs.Users;
 using Domain.Interfaces;
 using Domain.Users;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace API.Services.Users
@@ -8,6 +10,9 @@ namespace API.Services.Users
     public interface IUserService
     {
         public Task<AddUserResponse> AddNewUser(AddUserRequest model);
+        public Task<List<UserInfoDTO>> SearchAsync(GetUserRequest request);
+        public Task<UserInfoDTO> GetUser(int id);
+
     }
 
     public class UserService : BaseService,IUserService
@@ -15,8 +20,6 @@ namespace API.Services.Users
         public UserService(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
         }
-
-       
 
         public async Task<AddUserResponse> AddNewUser(AddUserRequest model)
         {
@@ -38,5 +41,39 @@ namespace API.Services.Users
 
             return response;
         }
+
+        public async Task<UserInfoDTO> GetUser(int id)
+        {
+            var repository = UnitOfWork.AsyncRepository<User>();
+            var entity = await repository.GetAsyncById(id);
+            return new UserInfoDTO()
+            {
+                Name = entity.Name,
+                Id = entity.Id,
+                Address = entity.Address,
+                CompanyId=entity.CompanyId,
+                Email=entity.Email
+            };
+        }
+
+        public async Task<List<UserInfoDTO>> SearchAsync(GetUserRequest request)
+        {
+            var repository = UnitOfWork.AsyncRepository<User>();
+            var users = await repository
+                .ListAsync(_ => _.Name.Contains(request.Search));
+
+            var userDTOs = users.Select(_ => new UserInfoDTO()
+            {
+                Address = _.Address,
+                CompanyId = _.CompanyId,
+                Email=_.Email,
+                Name = _.Name,
+                Id = _.Id,
+            })
+            .ToList();
+
+            return userDTOs;
+        }
+
     }
 }

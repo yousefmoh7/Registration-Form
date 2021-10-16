@@ -18,4 +18,10 @@
 
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="DTOs\Companies\AddCompany - Copy.Request.cs">
+      <DependentUpon>AddCompany.Request.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
 </Project>

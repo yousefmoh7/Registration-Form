@@ -1,7 +1,11 @@
 ﻿using API.DTOs.Compaines;
-using API.DTOs.Users;
+using API.DTOs.Companies;
 using Domain.Departments;
 using Domain.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace API.Services.Compaines
@@ -9,6 +13,9 @@ namespace API.Services.Compaines
     public interface ICompanyService
     {
         public Task<AddCompanyResponse> AddNewCompany(AddCompanyRequest model);
+        public Task<CompanyInfo> GetCompany(int id);
+        public Task<List<CompanyInfo>> SearchAsync(GetCompanyRequest request);
+
     }
     public class CompanyService : BaseService, ICompanyService
     {
@@ -19,7 +26,7 @@ namespace API.Services.Compaines
         public async Task<AddCompanyResponse> AddNewCompany(AddCompanyRequest model)
         {
 
-            var company = new Company(model.Name,model.Address,model.Description);
+            var company = new Company(model.Name, model.Address, model.Description);
 
             var repository = UnitOfWork.AsyncRepository<Company>();
             await repository.AddAsync(company);
@@ -34,5 +41,39 @@ namespace API.Services.Compaines
             return response;
         }
 
+
+
+        public async Task<CompanyInfo> GetCompany(int id)
+        {
+            var repository = UnitOfWork.AsyncRepository<Company>();
+            var entity = await repository.GetAsyncById(id);
+            return new CompanyInfo()
+            {
+                Name = entity.Name,
+                Id = entity.Id,
+                Address = entity.Address,
+                Description = entity.Description
+            };
+        }
+
+        public async Task<List<CompanyInfo>> SearchAsync(GetCompanyRequest request)
+        {
+            var repository = UnitOfWork.AsyncRepository<Company>();
+
+            var companies =
+             await repository
+             .ListAsync(_ => _.Name.Contains(request.Search));
+
+            var companyDTOs = companies.Select(_ => new CompanyInfo
+            {
+                Address = _.Address,
+                Name = _.Name,
+                Description = _.Description,
+                Id = _.Id,
+            })
+            .ToList();
+
+            return companyDTOs;
+        }
     }
 }

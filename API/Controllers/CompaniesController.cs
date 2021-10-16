@@ -25,8 +25,22 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] AddCompanyRequest request)
         {
-            var users = await _service.AddNewCompany(request);
-            return Ok(users);
+            var compaines = await _service.AddNewCompany(request);
+            return Ok(compaines);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            var company = await _service.GetCompany(id);
+            return Ok(company);
+        }
+
+        [HttpGet()]
+        public async Task<IActionResult> Get([FromQuery] GetCompanyRequest request)
+        {
+            var compaines = await _service.SearchAsync(request);
+            return Ok(compaines);
         }
     }
 }
