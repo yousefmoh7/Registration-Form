@@ -13,7 +13,9 @@ namespace API.Services.Compaines
     public interface ICompanyService
     {
         public Task<AddCompanyResponse> AddNewCompany(AddCompanyRequest model);
+        public Task<CompanyInfo> UpdateCompany(UpdateCompanyRequest model, int id);
         public Task<CompanyInfo> GetCompany(int id);
+        public Task DeleteCompany(int id);
         public Task<List<CompanyInfo>> SearchAsync(GetCompanyRequest request);
 
     }
@@ -41,7 +43,14 @@ namespace API.Services.Compaines
             return response;
         }
 
+        public async Task DeleteCompany(int id)
+        {
+            var repository = UnitOfWork.AsyncRepository<Company>();
+            var entity = await repository.GetAsyncById(id);
+            await repository.DeleteAsync(entity);
+            await UnitOfWork.SaveChangesAsync();
 
+        }
 
         public async Task<CompanyInfo> GetCompany(int id)
         {
@@ -74,6 +83,23 @@ namespace API.Services.Compaines
             .ToList();
 
             return companyDTOs;
+        }
+
+        public async Task<CompanyInfo> UpdateCompany(UpdateCompanyRequest model, int id)
+        {
+            var repository = UnitOfWork.AsyncRepository<Company>();
+            var company =await repository.GetAsyncById(id);
+            company.Update(model.Name, model.Address, model.Description);
+            await repository.UpdateAsync(company);
+            await UnitOfWork.SaveChangesAsync();
+
+            return new CompanyInfo
+            {
+                Name = company.Name,
+                Id = company.Id,
+                Address = company.Address,
+                Description = company.Description
+            };
         }
     }
 }

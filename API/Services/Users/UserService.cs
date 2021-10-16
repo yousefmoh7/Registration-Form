@@ -13,6 +13,10 @@ namespace API.Services.Users
         public Task<List<UserInfoDTO>> SearchAsync(GetUserRequest request);
         public Task<UserInfoDTO> GetUser(int id);
 
+        public Task<UserInfoDTO> UpdateUser(UpdateUserRequest model, int id);
+        public Task DeleteUser(int id);
+
+
     }
 
     public class UserService : BaseService,IUserService
@@ -40,6 +44,14 @@ namespace API.Services.Users
             };
 
             return response;
+        }
+
+        public async Task DeleteUser(int id)
+        {
+            var repository = UnitOfWork.AsyncRepository<User>();
+            var entity = await repository.GetAsyncById(id);
+            await repository.DeleteAsync(entity);
+            await UnitOfWork.SaveChangesAsync();
         }
 
         public async Task<UserInfoDTO> GetUser(int id)
@@ -75,5 +87,21 @@ namespace API.Services.Users
             return userDTOs;
         }
 
+        public async Task<UserInfoDTO> UpdateUser(UpdateUserRequest model, int id)
+        {
+            var repository = UnitOfWork.AsyncRepository<User>();
+            var user = await repository.GetAsyncById(id);
+            user.Update(model.Name, model.Address, model.Email, model.Password, model.CompanyId);
+            await repository.UpdateAsync(user);
+            await UnitOfWork.SaveChangesAsync();
+
+            return new UserInfoDTO
+            {
+                Name = user.Name,
+                CompanyId = user.CompanyId,
+                Email = user.Email,
+                Address=user.Address
+            };
+        }
     }
 }

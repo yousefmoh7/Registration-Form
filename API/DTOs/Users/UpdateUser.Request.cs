@@ -6,22 +6,20 @@ namespace API.DTOs.Users
     public class UpdateUserRequest
     {
         [Required]
-        public int? Id { get; set; }
+        [StringLength(50)]
+        public string Name { get; set; }
 
         [Required]
         [StringLength(50)]
-        public string FirstName { get; set; }
-
+        public string Address { get; set; }
         [Required]
         [StringLength(125)]
-        public string LastName { get; set; }
+        public string Password { get; set; }
 
         [StringLength(255)]
-        public string Address { get; set; }
-
-        public DateTime? BirthDate { get; set; }
+        public string Email { get; set; }
 
         [Required]
-        public int? DepartmentId { get; set; }
+        public int CompanyId { get; set; }
     }
 }

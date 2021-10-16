@@ -42,5 +42,19 @@ namespace API.Controllers
             var compaines = await _service.SearchAsync(request);
             return Ok(compaines);
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update([FromBody] UpdateCompanyRequest request,int id)
+        {
+            var compaines = await _service.UpdateCompany(request, id);
+            return Ok(compaines);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _service.DeleteCompany(id);
+            return NoContent();
+        }
     }
 }

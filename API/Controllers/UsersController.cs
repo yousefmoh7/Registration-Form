@@ -42,5 +42,20 @@ namespace API.Controllers
             var user = await _service.GetUser(id);
             return Ok(user);
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update([FromBody] UpdateUserRequest request, int id)
+        {
+            var user = await _service.UpdateUser(request, id);
+            return Ok(user);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _service.DeleteUser(id);
+            return NoContent();
+        }
+
     }
 }
