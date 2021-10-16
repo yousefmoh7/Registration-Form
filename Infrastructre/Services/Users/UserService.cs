@@ -15,7 +15,6 @@ namespace Infrastructre.Services.Users
         public Task<AddUserResponse> AddNewUser(AddUserRequest model);
         public Task<List<UserInfoDTO>> SearchAsync(GetUserRequest request);
         public Task<UserInfoDTO> GetUser(int id);
-
         public Task<UserInfoDTO> UpdateUser(UpdateUserRequest model, int id);
         public Task DeleteUser(int id);
 
