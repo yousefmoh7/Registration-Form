@@ -1,7 +1,6 @@
 ﻿using Domain.Base;
 using Domain.Interfaces;
 using Infrastructure.Data.Repositories;
-using System;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Data

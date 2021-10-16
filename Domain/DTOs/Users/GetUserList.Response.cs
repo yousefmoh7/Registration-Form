@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace API.DTOs.Users
+﻿namespace API.DTOs.Users
 {
     public class UserInfoDTO
     {

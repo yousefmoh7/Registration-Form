@@ -40,6 +40,11 @@ namespace Infrastructure.Data.Repositories
             return await _dbSet.FindAsync(id);
         }
 
+        public async Task<bool> IsExistAsync(Expression<Func<T, bool>> expression)
+        {
+            return await _dbSet.AnyAsync(expression);
+        }
+
         public Task<List<T>> ListAsync(Expression<Func<T, bool>> expression)
         {
             return _dbSet.Where(expression).ToListAsync();

@@ -1,5 +1,5 @@
 ﻿using API.DTOs.Compaines;
-using API.Services.Compaines;
+using Infrastructre.Services.Compaines;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
@@ -25,6 +25,7 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] AddCompanyRequest request)
         {
+
             var compaines = await _service.AddNewCompany(request);
             return Ok(compaines);
         }
@@ -44,7 +45,7 @@ namespace API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update([FromBody] UpdateCompanyRequest request,int id)
+        public async Task<IActionResult> Update([FromBody] UpdateCompanyRequest request, int id)
         {
             var compaines = await _service.UpdateCompany(request, id);
             return Ok(compaines);

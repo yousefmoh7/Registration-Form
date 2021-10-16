@@ -1,5 +1,5 @@
 ﻿using API.DTOs.Users;
-using API.Services.Users;
+using Infrastructre.Services.Users;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;

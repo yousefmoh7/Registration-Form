@@ -1,7 +1,8 @@
-﻿using API.Services.Compaines;
-using API.Services.Users;
+﻿using Domain.Companies;
 using Domain.Interfaces;
 using Domain.Users;
+using Infrastructre.Services.Compaines;
+using Infrastructre.Services.Users;
 using Infrastructure.Data;
 using Infrastructure.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -16,7 +17,9 @@ namespace API.Extensions
         {
             return services
                 .AddScoped(typeof(IAsyncRepository<>), typeof(RepositoryBase<>))
-                .AddScoped<IUserRepository, UserRepository>();
+                .AddScoped<IUserRepository, UserRepository>()
+                .AddScoped<ICompanyRepository, CompanyRepository>();
+
         }
 
         public static IServiceCollection AddUnitOfWork(this IServiceCollection services)
@@ -36,7 +39,7 @@ namespace API.Extensions
            )
         {
             return services
-                .AddScoped<IUserService,UserService>()
+                .AddScoped<IUserService, UserService>()
                 .AddScoped<ICompanyService, CompanyService>();
         }
     }

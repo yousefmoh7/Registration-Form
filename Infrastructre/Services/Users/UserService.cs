@@ -1,11 +1,14 @@
 ﻿using API.DTOs.Users;
 using Domain.Interfaces;
 using Domain.Users;
+using FluentValidation;
+using Infrastructre.Validators;
+using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace API.Services.Users
+namespace Infrastructre.Services.Users
 {
     public interface IUserService
     {
@@ -19,7 +22,7 @@ namespace API.Services.Users
 
     }
 
-    public class UserService : BaseService,IUserService
+    public class UserService : BaseService, IUserService
     {
         public UserService(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
@@ -32,8 +35,12 @@ namespace API.Services.Users
                 , model.Address
                 , model.Password
                 , model.CompanyId);
-
+            //var validator = new UserValidator();
+            //validator.ValidateAndThrow(model);
             var repository = UnitOfWork.AsyncRepository<User>();
+            if (await repository.IsExistAsync(x => x.Name == model.Name))
+                throw new BadHttpRequestException("User Name Already Used");
+
             await repository.AddAsync(user);
             await UnitOfWork.SaveChangesAsync();
 
@@ -57,14 +64,17 @@ namespace API.Services.Users
         public async Task<UserInfoDTO> GetUser(int id)
         {
             var repository = UnitOfWork.AsyncRepository<User>();
-            var entity = await repository.GetAsyncById(id);
+            var user = await repository.GetAsyncById(id);
+            if (user == null)
+                throw new KeyNotFoundException("User not found");
+
             return new UserInfoDTO()
             {
-                Name = entity.Name,
-                Id = entity.Id,
-                Address = entity.Address,
-                CompanyId=entity.CompanyId,
-                Email=entity.Email
+                Name = user.Name,
+                Id = user.Id,
+                Address = user.Address,
+                CompanyId = user.CompanyId,
+                Email = user.Email
             };
         }
 
@@ -78,7 +88,7 @@ namespace API.Services.Users
             {
                 Address = _.Address,
                 CompanyId = _.CompanyId,
-                Email=_.Email,
+                Email = _.Email,
                 Name = _.Name,
                 Id = _.Id,
             })
@@ -91,6 +101,9 @@ namespace API.Services.Users
         {
             var repository = UnitOfWork.AsyncRepository<User>();
             var user = await repository.GetAsyncById(id);
+            if (user == null)
+                throw new KeyNotFoundException("User not found");
+
             user.Update(model.Name, model.Address, model.Email, model.Password, model.CompanyId);
             await repository.UpdateAsync(user);
             await UnitOfWork.SaveChangesAsync();
@@ -100,7 +113,7 @@ namespace API.Services.Users
                 Name = user.Name,
                 CompanyId = user.CompanyId,
                 Email = user.Email,
-                Address=user.Address
+                Address = user.Address
             };
         }
     }

@@ -1,6 +1,6 @@
 ﻿using Domain.Base;
 
-namespace Domain.Departments
+namespace Domain.Companies
 {
     public partial class Company : BaseEntity<int>
     {

@@ -1,14 +1,14 @@
 ﻿using API.DTOs.Compaines;
 using API.DTOs.Companies;
-using Domain.Departments;
+using Domain.Companies;
 using Domain.Interfaces;
-using System;
+using FluentValidation;
+using Infrastructre.Validators;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace API.Services.Compaines
+namespace Infrastructre.Services.Compaines
 {
     public interface ICompanyService
     {
@@ -27,6 +27,8 @@ namespace API.Services.Compaines
 
         public async Task<AddCompanyResponse> AddNewCompany(AddCompanyRequest model)
         {
+            var validator = new CompanyValidator();
+            validator.ValidateAndThrow(model);
 
             var company = new Company(model.Name, model.Address, model.Description);
 
@@ -88,7 +90,7 @@ namespace API.Services.Compaines
         public async Task<CompanyInfo> UpdateCompany(UpdateCompanyRequest model, int id)
         {
             var repository = UnitOfWork.AsyncRepository<Company>();
-            var company =await repository.GetAsyncById(id);
+            var company = await repository.GetAsyncById(id);
             company.Update(model.Name, model.Address, model.Description);
             await repository.UpdateAsync(company);
             await UnitOfWork.SaveChangesAsync();

@@ -14,6 +14,8 @@ namespace Domain.Interfaces
 
         Task<bool> DeleteAsync(T entity);
 
+        Task<bool> IsExistAsync(Expression<Func<T, bool>> expression);
+
         Task<T> GetAsync(Expression<Func<T, bool>> expression);
 
         Task<T> GetAsyncById(int id);

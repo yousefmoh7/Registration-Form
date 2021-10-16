@@ -1,7 +1,5 @@
 ﻿using Domain.Base;
-using Domain.Departments;
-using System;
-using System.Collections.Generic;
+using Domain.Companies;
 
 namespace Domain.Users
 {
@@ -13,7 +11,7 @@ namespace Domain.Users
             , string password
             , int companyId)
         {
-            this.Update(name, address, email, password,companyId);
+            this.Update(name, address, email, password, companyId);
         }
 
         public string Name { get; private set; }

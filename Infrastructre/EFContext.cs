@@ -1,4 +1,4 @@
-﻿using Domain.Departments;
+﻿using Domain.Companies;
 using Domain.Users;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,7 +9,7 @@ namespace Infrastructure.Data
         public EFContext(DbContextOptions<EFContext> options) : base(options)
         {
 
-            
+
         }
 
         public DbSet<User> Users { get; set; }

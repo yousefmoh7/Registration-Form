@@ -15,13 +15,11 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.10" />
-
+    <PackageReference Include="FluentValidation.AspNetCore" Version="10.3.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="DTOs\Companies\AddCompany - Copy.Request.cs">
-      <DependentUpon>AddCompany.Request.cs</DependentUpon>
-    </Compile>
+    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>

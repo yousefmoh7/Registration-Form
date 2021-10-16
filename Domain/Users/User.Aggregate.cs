@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace Domain.Users
+﻿namespace Domain.Users
 {
-    public partial class User 
+    public partial class User
     {
 
         public void Update(string name
