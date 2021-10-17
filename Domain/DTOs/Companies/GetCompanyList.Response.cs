@@ -1,4 +1,4 @@
-﻿namespace API.DTOs.Companies
+﻿namespace Domain.DTOs.Companies
 {
     public class CompanyInfo
     {

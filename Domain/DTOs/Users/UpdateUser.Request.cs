@@ -1,9 +1,14 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
-namespace API.DTOs.Users
+namespace Domain.DTOs.Users
 {
     public class UpdateUserRequest
     {
+
+        [JsonIgnore]
+        public int Id { get; set; }
+
         [Required]
         [StringLength(50)]
         public string Name { get; set; }

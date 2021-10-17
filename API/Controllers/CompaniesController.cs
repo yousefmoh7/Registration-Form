@@ -1,4 +1,4 @@
-﻿using API.DTOs.Compaines;
+﻿using Domain.DTOs.Compaines;
 using Infrastructre.Services.Compaines;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -25,7 +25,6 @@ namespace API.Controllers
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] AddCompanyRequest request)
         {
-
             var compaines = await _service.AddNewCompany(request);
             return Ok(compaines);
         }

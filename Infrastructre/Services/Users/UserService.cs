@@ -1,8 +1,6 @@
-﻿using API.DTOs.Users;
+﻿using Domain.DTOs.Users;
 using Domain.Interfaces;
 using Domain.Users;
-using FluentValidation;
-using Infrastructre.Validators;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.Linq;

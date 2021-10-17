@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace API.DTOs.Compaines
+namespace Domain.DTOs.Compaines
 {
     public class AddCompanyRequest
     {

@@ -1,6 +1,6 @@
-﻿using API.DTOs.Compaines;
-using API.DTOs.Companies;
-using Domain.Companies;
+﻿using Domain.Companies;
+using Domain.DTOs.Compaines;
+using Domain.DTOs.Companies;
 using Domain.Interfaces;
 using Infrastructre.ValidatorExtentions;
 using Infrastructre.Validators;
@@ -21,18 +21,22 @@ namespace Infrastructre.Services.Compaines
     }
     public class CompanyService : BaseService, ICompanyService
     {
-        public CompanyService(IUnitOfWork unitOfWork) : base(unitOfWork)
+
+        public CompanyService(
+            IUnitOfWork unitOfWork
+            ) : base(unitOfWork)
         {
         }
 
         public async Task<AddCompanyResponse> AddNewCompany(AddCompanyRequest model)
         {
-            var validator = new CompanyValidator();
+            var repository = UnitOfWork.AsyncRepository<Company>();
+
+            var validator = new CompanyAddValidator(repository);
             await validator.ValidateAndThrow(model);
 
             var company = new Company(model.Name, model.Address, model.Description);
 
-            var repository = UnitOfWork.AsyncRepository<Company>();
             await repository.AddAsync(company);
             await UnitOfWork.SaveChangesAsync();
 
@@ -90,6 +94,10 @@ namespace Infrastructre.Services.Compaines
         public async Task<CompanyInfo> UpdateCompany(UpdateCompanyRequest model, int id)
         {
             var repository = UnitOfWork.AsyncRepository<Company>();
+            model.Id = id;
+            var validator = new CompanyUpdateValidator(repository);
+            await validator.ValidateAndThrow(model);
+
             var company = await repository.GetAsyncById(id);
             company.Update(model.Name, model.Address, model.Description);
             await repository.UpdateAsync(company);

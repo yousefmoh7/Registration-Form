@@ -1,10 +1,9 @@
 using API.Controllers;
-using API.DTOs.Users;
+using Domain.DTOs.Users;
 using Infrastructre.Services.Users;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
-using System;
 using Xunit;
 
 namespace Tests
@@ -23,7 +22,7 @@ namespace Tests
             var userInfo = new UserInfoDTO
             {
                 Id = 1,
-                Name="name"
+                Name = "name"
             };
             userService.Setup(p => p.GetUser(1)).ReturnsAsync(userInfo);
             UsersController controller = new(logger.Object, userService.Object);

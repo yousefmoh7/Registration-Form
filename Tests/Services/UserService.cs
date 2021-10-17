@@ -1,9 +1,8 @@
 using API.Controllers;
-using API.DTOs.Users;
+using Domain.DTOs.Users;
 using Domain.Interfaces;
 using Domain.Users;
 using Infrastructre.Services.Users;
-using Infrastructure.Data;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
@@ -18,21 +17,21 @@ namespace Tests
         public Mock<IUnitOfWork> unitOfWork = new();
         #endregion
 
-       [Fact]
+        [Fact]
         public async void GetUserbyId()
         {
             var userInfo = new AddUserResponse
             {
                 Id = 1,
-                UserName="name"
+                UserName = "name"
             };
             var user = new User("name", "email", "address", "password", 1);
             unitOfWork.Setup(x => x.AsyncRepository<User>()).Returns(userRepository.Object);
             userRepository.Setup(p => p.GetAsyncById(1)).ReturnsAsync(user);
             UserService userService = new(unitOfWork.Object);
             var result = await userService.GetUser(1);
-           
-       
+
+
 
 
         }

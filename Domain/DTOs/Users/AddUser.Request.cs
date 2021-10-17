@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace API.DTOs.Users
+namespace Domain.DTOs.Users
 {
     public class AddUserRequest
     {

@@ -31,8 +31,7 @@ namespace API.Extensions
         public static IServiceCollection AddDatabase(this IServiceCollection services
             , IConfiguration configuration)
         {
-            return services.AddDbContext<EFContext>(options =>
-                     options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
+            return services.AddDbContext<EFContext>(options => options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Transient);
         }
 
         public static IServiceCollection AddBusinessServices(this IServiceCollection services

@@ -1,4 +1,4 @@
-﻿using API.DTOs.Users;
+﻿using Domain.DTOs.Users;
 using Infrastructre.Services.Users;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
