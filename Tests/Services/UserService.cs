@@ -27,8 +27,8 @@ namespace Tests
                 UserName="name"
             };
             var user = new User("name", "email", "address", "password", 1);
-            userRepository.Setup(p => p.GetAsyncById(1)).ReturnsAsync(user);
             unitOfWork.Setup(x => x.AsyncRepository<User>()).Returns(userRepository.Object);
+            userRepository.Setup(p => p.GetAsyncById(1)).ReturnsAsync(user);
             UserService userService = new(unitOfWork.Object);
             var result = await userService.GetUser(1);
            

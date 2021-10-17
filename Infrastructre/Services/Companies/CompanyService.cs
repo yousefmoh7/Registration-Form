@@ -2,7 +2,7 @@
 using API.DTOs.Companies;
 using Domain.Companies;
 using Domain.Interfaces;
-using FluentValidation;
+using Infrastructre.ValidatorExtentions;
 using Infrastructre.Validators;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +28,7 @@ namespace Infrastructre.Services.Compaines
         public async Task<AddCompanyResponse> AddNewCompany(AddCompanyRequest model)
         {
             var validator = new CompanyValidator();
-            validator.ValidateAndThrow(model);
+            await validator.ValidateAndThrow(model);
 
             var company = new Company(model.Name, model.Address, model.Description);
 

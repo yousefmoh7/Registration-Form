@@ -27,22 +27,12 @@ namespace WebApi.Helpers
                 var response = context.Response;
                 response.ContentType = "application/json";
 
-                switch (error)
+                response.StatusCode = error switch
                 {
-
-                    case KeyNotFoundException _:
-                        // not found error
-                        response.StatusCode = (int)HttpStatusCode.NotFound;
-                        break;
-                    case BadHttpRequestException _:
-                        response.StatusCode = (int)HttpStatusCode.BadRequest;
-                        break;
-                    default:
-                        // unhandled error
-                        response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                        break;
-                }
-
+                    KeyNotFoundException _ => (int)HttpStatusCode.NotFound,
+                    BadHttpRequestException _ => (int)HttpStatusCode.BadRequest,
+                    _ => (int)HttpStatusCode.InternalServerError,
+                };
                 var result = JsonSerializer.Serialize(new { message = error?.Message });
                 await response.WriteAsync(result);
             }
