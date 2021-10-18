@@ -1,5 +1,7 @@
 ﻿using Domain.Companies;
 using Domain.DTOs.Compaines;
+using Domain.DTOs.Companies;
+using Domain.DTOs.Users;
 using Domain.Interfaces;
 using Domain.Users;
 using FluentValidation;
@@ -39,7 +41,16 @@ namespace API.Extensions
 
         public static IServiceCollection AddValidators(this IServiceCollection services)
         {
-           return services.AddScoped<IValidator<UpdateCompanyRequest>, CompanyUpdateValidator>();
+            services.AddScoped<IValidator<AddCompanyRequest>, CompanyAddValidator>();
+            services.AddScoped<IValidator<UpdateCompanyRequest>, CompanyUpdateValidator>();
+            services.AddScoped<IValidator<CompanyBaseRequest>, CompanyGetValidator>();
+            services.AddScoped<IValidator<DeleteCompanyRequest>, CompanyDeleteValidator>();
+            services.AddScoped<IValidator<AddUserRequest>, AddUserValidator>();
+            services.AddScoped<IValidator<UpdateUserRequest>, UpdateUserValidator>();
+            services.AddScoped<IValidator<UserBaseRequest>, GetUserValidator>();
+
+
+            return services;
         }
 
 

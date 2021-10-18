@@ -24,22 +24,33 @@ namespace Infrastructre.Services.Compaines
     }
     public class CompanyService : ICompanyService
     {
-        public IAsyncRepository<Company> _companyRepository;
+        public ICompanyRepository _companyRepository;
+        private readonly IValidator<AddCompanyRequest> _companyAddValidator;
         private readonly IValidator<UpdateCompanyRequest> _companyUpdateValidator;
+        private readonly IValidator<CompanyBaseRequest> _companyGetValidator;
+        private readonly IValidator<DeleteCompanyRequest> _companyDeleteValidator;
 
+        
         public CompanyService(
-            IAsyncRepository<Company> companyRepository,
-            IValidator<UpdateCompanyRequest> companyUpdateValidator
-            ) 
+            ICompanyRepository companyRepository,
+            IValidator<UpdateCompanyRequest> companyUpdateValidator,
+            IValidator<AddCompanyRequest> companyAddValidator,
+            IValidator<CompanyBaseRequest> companyGetValidator,
+            IValidator<DeleteCompanyRequest> companyDeleteValidator
+            )
         {
             _companyRepository = companyRepository;
+            _companyAddValidator = companyAddValidator;
             _companyUpdateValidator = companyUpdateValidator;
+            _companyGetValidator = companyGetValidator;
+            _companyDeleteValidator = companyDeleteValidator;
 
         }
 
         public async Task<AddCompanyResponse> AddNewCompany(AddCompanyRequest model)
         {
 
+            await _companyAddValidator.ValidateAndThrowEx(model);
             var company = new Company(model.Name, model.Address, model.Description);
 
             await _companyRepository.AddAsync(company);
@@ -58,6 +69,8 @@ namespace Infrastructre.Services.Compaines
         {
             //var validator = new CompanyDeleteValidator(_companyRepository);
             //await validator.ValidateAndThrowEx(new DeleteCompanyRequest { Id = id });
+            await _companyDeleteValidator.ValidateAndThrowEx(new DeleteCompanyRequest { Id = id });
+
             var entity = await _companyRepository.GetAsyncById(id);
             await _companyRepository.DeleteAsync(entity);
             await _companyRepository.SaveChangesAsync();
@@ -66,6 +79,8 @@ namespace Infrastructre.Services.Compaines
 
         public async Task<CompanyInfo> GetCompany(int id)
         {
+            await _companyGetValidator.ValidateAndThrowEx(new CompanyBaseRequest { Id = id });
+
             var entity = await _companyRepository.GetAsyncById(id);
             return new CompanyInfo()
             {
@@ -81,7 +96,7 @@ namespace Infrastructre.Services.Compaines
 
             var companies =
              await _companyRepository
-             .ListAsync(_ => _.Name.Contains(request.Search));
+             .ListAsync();
 
             var companyDTOs = companies.Select(_ => new CompanyInfo
             {

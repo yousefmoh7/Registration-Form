@@ -1,4 +1,4 @@
-﻿namespace Domain.DTOs.Compaines
+﻿namespace Domain.DTOs.Companies
 {
     public class UpdateCompanyResponse
     {

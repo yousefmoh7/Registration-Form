@@ -1,5 +1,6 @@
 ﻿using Domain.Companies;
 using Domain.DTOs.Compaines;
+using Domain.DTOs.Companies;
 using Domain.Interfaces;
 using Domain.Shared;
 using FluentValidation;
@@ -37,9 +38,9 @@ namespace Infrastructre.Validators
 
         public async Task<bool> ValidateCompanyName(UpdateCompanyRequest company, CancellationToken token)
         {
-            var x= _companyRepository.IsExistAsync(x => x.Name == company.Name && x.Id != company.Id);
+            //var x= _companyRepository.IsExistAsync(x => x.Name == company.Name && x.Id != company.Id);
 
-            return ! await _companyRepository.IsExistAsync(x => x.Name == company.Name && x.Id != company.Id);
+            return ! (await _companyRepository.IsExistAsync(x => x.Name == company.Name && x.Id != company.Id));
         }
 
         public async Task<bool> ValidateCompanyIsExist(int id, CancellationToken token)

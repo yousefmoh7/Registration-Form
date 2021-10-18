@@ -71,12 +71,17 @@ namespace Infrastructre.Migrations
             modelBuilder.Entity("Domain.Users.User", b =>
                 {
                     b.HasOne("Domain.Companies.Company", "Company")
-                        .WithMany()
+                        .WithMany("Users")
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Company");
+                });
+
+            modelBuilder.Entity("Domain.Companies.Company", b =>
+                {
+                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

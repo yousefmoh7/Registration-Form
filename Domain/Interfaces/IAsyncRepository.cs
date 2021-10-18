@@ -21,6 +21,7 @@ namespace Domain.Interfaces
         Task<T> GetAsyncById(int id);
 
         Task<List<T>> ListAsync(Expression<Func<T, bool>> expression);
+        Task<List<T>> ListAsync();
         Task<int> SaveChangesAsync();
 
     }

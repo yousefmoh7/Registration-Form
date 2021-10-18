@@ -1,4 +1,5 @@
 ﻿using Domain.DTOs.Compaines;
+using Domain.DTOs.Companies;
 using Infrastructre.Services.Compaines;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;

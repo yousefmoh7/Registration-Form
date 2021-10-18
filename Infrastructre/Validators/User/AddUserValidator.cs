@@ -1,4 +1,5 @@
-﻿using Domain.DTOs.Users;
+﻿using Domain.Companies;
+using Domain.DTOs.Users;
 using Domain.Interfaces;
 using Domain.Shared;
 using Domain.Users;
@@ -12,10 +13,16 @@ namespace Infrastructre.Validators
     public class AddUserValidator : AbstractValidator<AddUserRequest>
     {
         readonly IAsyncRepository<User> _userRepository;
-     
-        public AddUserValidator(IAsyncRepository<User> userRepository)
+        readonly IAsyncRepository<Company> _companyRepository;
+
+        public AddUserValidator(IAsyncRepository<User> userRepository, IAsyncRepository<Company> companyRepository)
         {
             _userRepository = userRepository;
+            _companyRepository = companyRepository;
+
+            RuleFor(c => c.CompanyId).MustAsync(ValidateCompanyIsExist)
+                 .WithErrorCode(ValidatorErrorCodes.BadRequest)
+                 .WithMessage(c => ValidationErrorMessages.ErrorCompanyIsNotExist(c.CompanyId));
 
             RuleFor(c => c.Email).MustAsync(ValidateUserEmail)
                                  .WithErrorCode(ValidatorErrorCodes.BadRequest)
@@ -31,6 +38,11 @@ namespace Infrastructre.Validators
         public async Task<bool> ValidateUserEmail(string email, CancellationToken token)
         {
             return !await _userRepository.IsExistAsync(x => x.Email == email);
+        }
+
+        public async Task<bool> ValidateCompanyIsExist(int id, CancellationToken token)
+        {
+            return await _companyRepository.IsExistAsync(x => x.Id == id);
         }
     }
 }

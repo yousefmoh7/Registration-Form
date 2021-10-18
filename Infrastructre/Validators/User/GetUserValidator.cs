@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace Infrastructre.Validators
 {
-    public class DeleteUserValidator : AbstractValidator<DeleteUserRequest>
+    public class GetUserValidator : AbstractValidator<UserBaseRequest>
     {
         readonly IAsyncRepository<User> _userRepository;
-        public DeleteUserValidator(IAsyncRepository<User> userRepository)
+        public GetUserValidator(IAsyncRepository<User> userRepository)
         {
             _userRepository = userRepository;
 
@@ -22,7 +22,7 @@ namespace Infrastructre.Validators
 
         public async Task<bool> ValidateUserIsExist(int id, CancellationToken token)
         {
-            return !await _userRepository.IsExistAsync(x => x.Id == id);
+            return await _userRepository.IsExistAsync(x => x.Id == id);
         }
 
     }

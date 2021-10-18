@@ -3,11 +3,11 @@ using System.Text.Json.Serialization;
 
 namespace Domain.DTOs.Users
 {
-    public class UpdateUserRequest
+    public class UpdateUserRequest : UserBaseRequest
     {
 
         [JsonIgnore]
-        public int Id { get; set; }
+        public new int Id { get; set; }
 
         [Required]
         [StringLength(50)]

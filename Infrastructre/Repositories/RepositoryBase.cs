@@ -51,6 +51,10 @@ namespace Infrastructure.Data.Repositories
         {
             return _dbSet.Where(expression).ToListAsync();
         }
+        public Task<List<T>> ListAsync()
+        {
+            return _dbSet.ToListAsync();
+        }
 
         public Task<int> SaveChangesAsync()
         {

@@ -1,12 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace Domain.DTOs.Compaines
+namespace Domain.DTOs.Companies
 {
-    public class UpdateCompanyRequest
+    public class UpdateCompanyRequest : CompanyBaseRequest
     {
         [JsonIgnore]
-        public int Id { get; set; }
+        public new int Id { get; set; }
 
         [Required]
         [StringLength(50)]

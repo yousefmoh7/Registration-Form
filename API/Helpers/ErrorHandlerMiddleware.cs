@@ -34,7 +34,16 @@ namespace WebApi.Helpers
                     _ => (int)HttpStatusCode.InternalServerError,
                 };
                 var result = JsonSerializer.Serialize(new { message = error?.Message });
-                await response.WriteAsync(result);
+
+
+                await context.Response.WriteAsync(result);
+                //await context.Response.WriteAsync(new ErrorDetails()
+                //{
+                //    StatusCode = context.Response.StatusCode,
+                //    Message = error?.Message
+                //}.ToString());
+
+              //  await response.WriteAsync(result);
             }
         }
     }

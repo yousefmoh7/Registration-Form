@@ -1,5 +1,6 @@
 ﻿using Domain.Companies;
 using Domain.DTOs.Compaines;
+using Domain.DTOs.Companies;
 using Domain.Interfaces;
 using Domain.Shared;
 using FluentValidation;
@@ -17,15 +18,28 @@ namespace Infrastructre.Validators
         {
             _companyRepository = companyRepository;
             RuleFor(c => c.Id).MustAsync(ValidateCompanyIsExist)
-              .WithErrorCode(ValidatorErrorCodes.BadRequest)
-              .WithMessage(c => ErrorCompanyIsNotExist(c.Id));
+              .WithErrorCode(ValidatorErrorCodes.NotFound)
+              .WithMessage(c => ErrorCompanyIsNotExist(c.Id))
+               .DependentRules(() =>
+               {
+                   RuleFor(c => c.Id).MustAsync(ValidateCompanyHaveUsers)
+                       .WithErrorCode(ValidatorErrorCodes.BadRequest)
+                       .WithMessage(c => ErrorCompanyIsNotExist(c.Id));
+               });
 
-        }
+               }
 
         public async Task<bool> ValidateCompanyIsExist(int id, CancellationToken token)
         {
-            return !await _companyRepository.IsExistAsync(x => x.Id == id);
+            return await _companyRepository.IsExistAsync(x => x.Id == id);
         }
+
+        public async Task<bool> ValidateCompanyHaveUsers(int id, CancellationToken token)
+        {
+            var xx = (await _companyRepository.GetAsyncById(id));
+             return (await _companyRepository.GetAsyncById(id)).Users.Count > 0;            
+        }
+
 
 
     }
