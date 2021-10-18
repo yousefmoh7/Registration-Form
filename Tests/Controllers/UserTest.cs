@@ -34,8 +34,31 @@ namespace Tests
             Assert.NotNull(okResult);
             Assert.Equal(200, okResult.StatusCode);
             Assert.Equal(user.Name, userInfo.Name);
+        }
 
+        [Fact]
+        public async void AddUser()
+        {
+            var addUser = new AddUserRequest
+            {
+               
+                Name = "name"
+            };
+            var userInfo = new UserInfo
+            {
+                Id = 1,
+                Name = "name"
+            };
+            userService.Setup(p => p.AddNewUser(addUser)).ReturnsAsync(userInfo);
+            UsersController controller = new(logger.Object, userService.Object);
+            var result = await controller.Add(addUser);
+            var okResult = result as OkObjectResult;
+            var user = okResult.Value as UserInfo;
 
+            // assert
+            Assert.NotNull(okResult);
+            Assert.Equal(200, okResult.StatusCode);
+            Assert.Equal(addUser.Name, user.Name);
         }
     }
 }

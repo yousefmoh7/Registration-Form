@@ -11,7 +11,7 @@ namespace Infrastructre.ValidatorExtentions
 {
     public static class ValidatiorExtentions
     {
-        public static async Task ValidateAndThrowEx<T>(this IValidator<T> validator, T model)
+        public static async Task ValidateAndThrowException<T>(this IValidator<T> validator, T model)
         {
             var result = await validator.ValidateAsync(model);
             if (!result.IsValid)

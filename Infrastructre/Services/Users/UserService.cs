@@ -44,7 +44,7 @@ namespace Infrastructre.Services.Users
 
         public async Task<UserInfo> AddNewUser(AddUserRequest model)
         {
-            await _userAddValidator.ValidateAndThrowEx(model);
+            await _userAddValidator.ValidateAndThrowException(model);
             var user = new User(model.Name
                 , model.Email
                 , model.Address
@@ -69,7 +69,7 @@ namespace Infrastructre.Services.Users
         public async Task DeleteUser(int id)
         {
             var entity = await _userRepository.GetAsyncById(id);
-            await _userGetValidator.ValidateAndThrowEx(new UserBaseRequest { Id = id });
+            await _userGetValidator.ValidateAndThrowException(new UserBaseRequest { Id = id });
 
             await _userRepository.DeleteAsync(entity);
             await _userRepository.SaveChangesAsync();
@@ -77,7 +77,7 @@ namespace Infrastructre.Services.Users
 
         public async Task<UserInfo> GetUser(int id)
         {
-            await _userGetValidator.ValidateAndThrowEx(new UserBaseRequest { Id = id });
+            await _userGetValidator.ValidateAndThrowException(new UserBaseRequest { Id = id });
 
             var user = await _userRepository.GetAsyncById(id);
 
@@ -112,7 +112,7 @@ namespace Infrastructre.Services.Users
         public async Task<UserInfo> UpdateUser(UpdateUserRequest model, int id)
         {
             model.Id = id;
-            await _userUpdateValidator.ValidateAndThrowEx(model);
+            await _userUpdateValidator.ValidateAndThrowException(model);
 
             var user = await _userRepository.GetAsyncById(id);
             user.Update(model.Name, model.Address, model.Email, model.Password, model.CompanyId);

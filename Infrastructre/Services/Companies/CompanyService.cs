@@ -47,7 +47,7 @@ namespace Infrastructre.Services.Companies
         public async Task<CompanyInfo> AddNewCompany(AddCompanyRequest model)
         {
 
-            await _companyAddValidator.ValidateAndThrowEx(model);
+            await _companyAddValidator.ValidateAndThrowException(model);
             var company = new Company(model.Name, model.Address, model.Description);
 
             await _companyRepository.AddAsync(company);
@@ -66,7 +66,7 @@ namespace Infrastructre.Services.Companies
 
         public async Task DeleteCompany(int id)
         {
-            await _companyDeleteValidator.ValidateAndThrowEx(new DeleteCompanyRequest { Id = id });
+            await _companyDeleteValidator.ValidateAndThrowException(new DeleteCompanyRequest { Id = id });
             var entity = await _companyRepository.GetAsyncById(id);
             await _companyRepository.DeleteAsync(entity);
             await _companyRepository.SaveChangesAsync();
@@ -75,7 +75,7 @@ namespace Infrastructre.Services.Companies
 
         public async Task<CompanyInfo> GetCompany(int id)
         {
-            await _companyGetValidator.ValidateAndThrowEx(new CompanyBaseRequest { Id = id });
+            await _companyGetValidator.ValidateAndThrowException(new CompanyBaseRequest { Id = id });
 
             var entity = await _companyRepository.GetAsyncById(id);
             return new CompanyInfo()
@@ -109,7 +109,7 @@ namespace Infrastructre.Services.Companies
         public async Task<CompanyInfo> UpdateCompany(UpdateCompanyRequest model, int id)
         {
             model.Id = id;
-            await _companyUpdateValidator.ValidateAndThrowEx(model);
+            await _companyUpdateValidator.ValidateAndThrowException(model);
             var company = await _companyRepository.GetAsyncById(id);
             //if (await _companyRepository.GetAsyncById(id) == null)
             //    throw new KeyNotFoundException("");
