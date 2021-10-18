@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructre.Validators
 {
+ 
     public class CompanyUpdateValidator : AbstractValidator<UpdateCompanyRequest>
     {
         readonly IAsyncRepository<Company> _companyRepository;
@@ -15,23 +16,23 @@ namespace Infrastructre.Validators
         public CompanyUpdateValidator(IAsyncRepository<Company> companyRepository)
         {
             _companyRepository = companyRepository;
-
             RuleFor(c => c.Id).MustAsync(ValidateCompanyIsExist)
-             .WithErrorCode(ValidatorErrorCodes.NotFound)
-             .WithMessage(c => ValidationErrorMessages.ErrorCompanyIsNotExist(c.Id)).DependentRules(()=>{
+           .WithErrorCode(ValidatorErrorCodes.NotFound)
+           .WithMessage(c => ValidationErrorMessages.ErrorCompanyIsNotExist(c.Id))
+           .DependentRules(() => {
 
-                 RuleFor(c => c).MustAsync(ValidateCompanyName)
-                   .WithErrorCode(ValidatorErrorCodes.BadRequest)
-                   .WithMessage(c => ValidationErrorMessages.ErrorCompanyNameAlreadyExist(c.Name))
-                   .DependentRules(() =>
-                   {
+               RuleFor(c => c).MustAsync(ValidateCompanyName)
+                 .WithErrorCode(ValidatorErrorCodes.BadRequest)
+                 .WithMessage(c => ValidationErrorMessages.ErrorCompanyNameAlreadyExist(c.Name))
+                 .DependentRules(() =>
+                 {
 
                      RuleFor(c => c.Address)
-                    .Must(c => c.Length > 5)
-                    .WithErrorCode(ValidatorErrorCodes.BadRequest)
-                    .WithMessage(ValidationErrorMessages.ErrorCompanyAddress);
-                   });
-             });
+                     .Must(c => c.Length > 5)
+                     .WithErrorCode(ValidatorErrorCodes.BadRequest)
+                     .WithMessage(ValidationErrorMessages.ErrorCompanyAddress);
+                 });
+           });
         }
 
         public async Task<bool> ValidateCompanyName(UpdateCompanyRequest company, CancellationToken token)

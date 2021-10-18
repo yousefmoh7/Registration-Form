@@ -29,7 +29,6 @@ namespace Infrastructre.Validators
                   RuleFor(c => c.Email).MustAsync(ValidateUserEmail)
                      .WithErrorCode(ValidatorErrorCodes.BadRequest)
                      .WithMessage(c => ValidationErrorMessages.ErrorEmailAlreadyTaken(c.Email));
-
               });
 
             RuleFor(c => c.Id).MustAsync(ValidateCompanyIsExist)

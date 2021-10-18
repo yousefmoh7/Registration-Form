@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructre.Validators
 {
-    public class DeleteUserValidator : AbstractValidator<UpdateUserRequest>
+    public class DeleteUserValidator : AbstractValidator<DeleteUserRequest>
     {
         readonly IAsyncRepository<User> _userRepository;
         public DeleteUserValidator(IAsyncRepository<User> userRepository)

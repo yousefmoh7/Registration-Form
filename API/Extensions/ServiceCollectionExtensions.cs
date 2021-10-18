@@ -1,8 +1,11 @@
 ﻿using Domain.Companies;
+using Domain.DTOs.Compaines;
 using Domain.Interfaces;
 using Domain.Users;
+using FluentValidation;
 using Infrastructre.Services.Compaines;
 using Infrastructre.Services.Users;
+using Infrastructre.Validators;
 using Infrastructure.Data;
 using Infrastructure.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -31,8 +34,14 @@ namespace API.Extensions
         public static IServiceCollection AddDatabase(this IServiceCollection services
             , IConfiguration configuration)
         {
-            return services.AddDbContext<EFContext>(options => options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")), ServiceLifetime.Transient);
+            return services.AddDbContext<EFContext>(options => options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
         }
+
+        public static IServiceCollection AddValidators(this IServiceCollection services)
+        {
+           return services.AddScoped<IValidator<UpdateCompanyRequest>, CompanyUpdateValidator>();
+        }
+
 
         public static IServiceCollection AddBusinessServices(this IServiceCollection services
            )

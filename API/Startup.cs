@@ -26,8 +26,9 @@ namespace API
 
             services
                .AddDatabase(Configuration)
-               .AddUnitOfWork()
+               //.AddUnitOfWork()
                .AddRepositories()
+               .AddValidators()
                .AddBusinessServices();
 
             services.AddSwaggerGen(c =>
@@ -49,7 +50,6 @@ namespace API
             app.UseHttpsRedirection();
 
             app.UseRouting();
-            // global error handler
             app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.UseAuthorization();

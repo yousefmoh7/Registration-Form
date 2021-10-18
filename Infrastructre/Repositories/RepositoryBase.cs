@@ -12,10 +12,12 @@ namespace Infrastructure.Data.Repositories
     public class RepositoryBase<T> : IAsyncRepository<T> where T : BaseEntity
     {
         private readonly DbSet<T> _dbSet;
+        private readonly EFContext _dbContext;
 
         public RepositoryBase(EFContext dbContext)
         {
             _dbSet = dbContext.Set<T>();
+            _dbContext = dbContext;
         }
 
         public async Task<T> AddAsync(T entity)
@@ -48,6 +50,11 @@ namespace Infrastructure.Data.Repositories
         public Task<List<T>> ListAsync(Expression<Func<T, bool>> expression)
         {
             return _dbSet.Where(expression).ToListAsync();
+        }
+
+        public Task<int> SaveChangesAsync()
+        {
+            return _dbContext.SaveChangesAsync();
         }
 
         public Task<T> UpdateAsync(T entity)

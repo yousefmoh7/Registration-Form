@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructre.Validators
 {
-    public class CompanyDeleteValidator : AbstractValidator<UpdateCompanyRequest>
+    public class CompanyDeleteValidator : AbstractValidator<DeleteCompanyRequest>
     {
         readonly IAsyncRepository<Company> _companyRepository;
         public static string ErrorCompanyIsNotExist(int id) => $"Company with id :{id} does not exist ";
@@ -26,6 +26,7 @@ namespace Infrastructre.Validators
         {
             return !await _companyRepository.IsExistAsync(x => x.Id == id);
         }
+
 
     }
 }

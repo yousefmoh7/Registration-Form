@@ -1,7 +1,9 @@
-﻿using Domain.DTOs.Users;
+﻿using Domain.Companies;
+using Domain.DTOs.Users;
 using Domain.Interfaces;
 using Domain.Users;
-using Microsoft.AspNetCore.Http;
+using FluentValidation;
+using Infrastructre.Validators;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,27 +21,35 @@ namespace Infrastructre.Services.Users
 
     }
 
-    public class UserService : BaseService, IUserService
+    public class UserService : IUserService
     {
-        public UserService(IUnitOfWork unitOfWork) : base(unitOfWork)
+        public IAsyncRepository<User> _userRepository;
+        public IAsyncRepository<Company> _companyRepository;
+
+
+        public UserService(IAsyncRepository<User> userRepository,
+            IAsyncRepository<Company> companyRepository
+            )
         {
+            _userRepository = userRepository;
+            _companyRepository = companyRepository;
+
         }
 
         public async Task<AddUserResponse> AddNewUser(AddUserRequest model)
         {
+         
             var user = new User(model.Name
                 , model.Email
                 , model.Address
                 , model.Password
                 , model.CompanyId);
-            //var validator = new UserValidator();
-            //validator.ValidateAndThrow(model);
-            var repository = UnitOfWork.AsyncRepository<User>();
-            if (await repository.IsExistAsync(x => x.Name == model.Name))
-                throw new BadHttpRequestException("User Name Already Used");
 
-            await repository.AddAsync(user);
-            await UnitOfWork.SaveChangesAsync();
+            var validator = new AddUserValidator(_userRepository);
+            validator.ValidateAndThrow(model);
+      
+            await _userRepository.AddAsync(user);
+            await _userRepository.SaveChangesAsync();
 
             var response = new AddUserResponse()
             {
@@ -52,18 +62,17 @@ namespace Infrastructre.Services.Users
 
         public async Task DeleteUser(int id)
         {
-            var repository = UnitOfWork.AsyncRepository<User>();
-            var entity = await repository.GetAsyncById(id);
-            await repository.DeleteAsync(entity);
-            await UnitOfWork.SaveChangesAsync();
+            var entity = await _userRepository.GetAsyncById(id);
+            var validator = new DeleteUserValidator(_userRepository);
+            validator.ValidateAndThrow(new DeleteUserRequest { Id=id} );
+            await _userRepository.DeleteAsync(entity);
+            await _userRepository.SaveChangesAsync();
         }
 
         public async Task<UserInfoDTO> GetUser(int id)
         {
-            var repository = UnitOfWork.AsyncRepository<User>();
-            var user = await repository.GetAsyncById(id);
-            if (user == null)
-                throw new KeyNotFoundException("User not found");
+            var user = await _userRepository.GetAsyncById(id);
+           
 
             return new UserInfoDTO()
             {
@@ -77,8 +86,7 @@ namespace Infrastructre.Services.Users
 
         public async Task<List<UserInfoDTO>> SearchAsync(GetUserRequest request)
         {
-            var repository = UnitOfWork.AsyncRepository<User>();
-            var users = await repository
+            var users = await _userRepository
                 .ListAsync(_ => _.Name.Contains(request.Search));
 
             var userDTOs = users.Select(_ => new UserInfoDTO()
@@ -96,14 +104,15 @@ namespace Infrastructre.Services.Users
 
         public async Task<UserInfoDTO> UpdateUser(UpdateUserRequest model, int id)
         {
-            var repository = UnitOfWork.AsyncRepository<User>();
-            var user = await repository.GetAsyncById(id);
-            if (user == null)
-                throw new KeyNotFoundException("User not found");
+            model.Id = id;
+            var validator = new UpdateUserValidator(_userRepository, _companyRepository);
+            validator.ValidateAndThrow(model);
 
+
+            var user = await _userRepository.GetAsyncById(id);
             user.Update(model.Name, model.Address, model.Email, model.Password, model.CompanyId);
-            await repository.UpdateAsync(user);
-            await UnitOfWork.SaveChangesAsync();
+            await _userRepository.UpdateAsync(user);
+            await _userRepository.SaveChangesAsync();
 
             return new UserInfoDTO
             {
