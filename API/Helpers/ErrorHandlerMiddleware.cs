@@ -37,13 +37,6 @@ namespace WebApi.Helpers
 
 
                 await context.Response.WriteAsync(result);
-                //await context.Response.WriteAsync(new ErrorDetails()
-                //{
-                //    StatusCode = context.Response.StatusCode,
-                //    Message = error?.Message
-                //}.ToString());
-
-              //  await response.WriteAsync(result);
             }
         }
     }

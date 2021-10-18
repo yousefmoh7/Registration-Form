@@ -1,39 +1,35 @@
-﻿using Domain.Companies;
-using Domain.DTOs.Users;
+﻿using Domain.DTOs.Users;
+using Domain.Entities.Users;
 using Domain.Interfaces;
-using Domain.Users;
 using FluentValidation;
 using Infrastructre.ValidatorExtentions;
-using Infrastructre.Validators;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace Infrastructre.Services.Users
 {
     public interface IUserService
     {
-        public Task<AddUserResponse> AddNewUser(AddUserRequest model);
-        public Task<List<UserInfoDTO>> SearchAsync(GetUserRequest request);
-        public Task<UserInfoDTO> GetUser(int id);
-        public Task<UserInfoDTO> UpdateUser(UpdateUserRequest model, int id);
+        public Task<UserInfo> AddNewUser(AddUserRequest model);
+        public Task<List<UserInfo>> GetAllUsersAsync();
+        public Task<UserInfo> GetUser(int id);
+        public Task<UserInfo> UpdateUser(UpdateUserRequest model, int id);
         public Task DeleteUser(int id);
-
 
     }
 
     public class UserService : IUserService
     {
-        public IAsyncRepository<User> _userRepository;
-        public IAsyncRepository<Company> _companyRepository;
+        public IUserRepository _userRepository;
+        public ICompanyRepository _companyRepository;
         private readonly IValidator<AddUserRequest> _userAddValidator;
         private readonly IValidator<UpdateUserRequest> _userUpdateValidator;
         private readonly IValidator<UserBaseRequest> _userGetValidator;
 
 
-        public UserService(IAsyncRepository<User> userRepository,
-            IAsyncRepository<Company> companyRepository,
+        public UserService(IUserRepository userRepository,
+            ICompanyRepository companyRepository,
             IValidator<UpdateUserRequest> userUpdateValidator,
             IValidator<AddUserRequest> userAddValidator,
             IValidator<UserBaseRequest> userGetValidator
@@ -46,23 +42,25 @@ namespace Infrastructre.Services.Users
             _userGetValidator = userGetValidator;
         }
 
-        public async Task<AddUserResponse> AddNewUser(AddUserRequest model)
+        public async Task<UserInfo> AddNewUser(AddUserRequest model)
         {
-            // validate company exists
             await _userAddValidator.ValidateAndThrowEx(model);
             var user = new User(model.Name
                 , model.Email
                 , model.Address
                 , model.Password
                 , model.CompanyId);
-      
+
             await _userRepository.AddAsync(user);
             await _userRepository.SaveChangesAsync();
 
-            var response = new AddUserResponse()
+            var response = new UserInfo()
             {
                 Id = user.Id,
-                UserName = user.Name
+                Name = user.Name,
+                Address = user.Address,
+                CompanyId = user.CompanyId,
+                Email = user.Email
             };
 
             return response;
@@ -77,14 +75,14 @@ namespace Infrastructre.Services.Users
             await _userRepository.SaveChangesAsync();
         }
 
-        public async Task<UserInfoDTO> GetUser(int id)
+        public async Task<UserInfo> GetUser(int id)
         {
             await _userGetValidator.ValidateAndThrowEx(new UserBaseRequest { Id = id });
 
             var user = await _userRepository.GetAsyncById(id);
-           
 
-            return new UserInfoDTO()
+
+            return new UserInfo()
             {
                 Name = user.Name,
                 Id = user.Id,
@@ -94,13 +92,11 @@ namespace Infrastructre.Services.Users
             };
         }
 
-        public async Task<List<UserInfoDTO>> SearchAsync(GetUserRequest request)
+        public async Task<List<UserInfo>> GetAllUsersAsync()
         {
 
-            //var users = await _userRepository
-            //    .ListAsync(_ => 0request.Search _.Name.Contains(request.Search));
             var users = await _userRepository.ListAsync();
-            var userDTOs = users.Select(_ => new UserInfoDTO()
+            var userDTOs = users.Select(_ => new UserInfo()
             {
                 Address = _.Address,
                 CompanyId = _.CompanyId,
@@ -113,19 +109,20 @@ namespace Infrastructre.Services.Users
             return userDTOs;
         }
 
-        public async Task<UserInfoDTO> UpdateUser(UpdateUserRequest model, int id)
+        public async Task<UserInfo> UpdateUser(UpdateUserRequest model, int id)
         {
             model.Id = id;
             await _userUpdateValidator.ValidateAndThrowEx(model);
-            
+
             var user = await _userRepository.GetAsyncById(id);
             user.Update(model.Name, model.Address, model.Email, model.Password, model.CompanyId);
             await _userRepository.UpdateAsync(user);
             await _userRepository.SaveChangesAsync();
 
-            return new UserInfoDTO
+            return new UserInfo
             {
                 Name = user.Name,
+                Id=user.Id,
                 CompanyId = user.CompanyId,
                 Email = user.Email,
                 Address = user.Address

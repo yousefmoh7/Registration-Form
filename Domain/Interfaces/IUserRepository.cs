@@ -1,6 +1,6 @@
-﻿using Domain.Interfaces;
+﻿using Domain.Entities.Users;
 
-namespace Domain.Users
+namespace Domain.Interfaces
 {
     public interface IUserRepository : IAsyncRepository<User>
     {

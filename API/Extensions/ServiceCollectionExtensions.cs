@@ -1,15 +1,13 @@
-﻿using Domain.Companies;
-using Domain.DTOs.Compaines;
+﻿using Domain.DTOs.Compaines;
 using Domain.DTOs.Companies;
 using Domain.DTOs.Users;
 using Domain.Interfaces;
-using Domain.Users;
 using FluentValidation;
-using Infrastructre.Services.Compaines;
+using Infrastructre.Repositories;
+using Infrastructre.Services.Companies;
 using Infrastructre.Services.Users;
 using Infrastructre.Validators;
 using Infrastructure.Data;
-using Infrastructure.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,12 +25,6 @@ namespace API.Extensions
 
         }
 
-        public static IServiceCollection AddUnitOfWork(this IServiceCollection services)
-        {
-            return services
-                .AddScoped<IUnitOfWork, UnitOfWork>();
-        }
-
         public static IServiceCollection AddDatabase(this IServiceCollection services
             , IConfiguration configuration)
         {
@@ -48,8 +40,6 @@ namespace API.Extensions
             services.AddScoped<IValidator<AddUserRequest>, AddUserValidator>();
             services.AddScoped<IValidator<UpdateUserRequest>, UpdateUserValidator>();
             services.AddScoped<IValidator<UserBaseRequest>, GetUserValidator>();
-
-
             return services;
         }
 

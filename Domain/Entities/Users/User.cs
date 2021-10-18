@@ -1,7 +1,7 @@
-﻿using Domain.Base;
-using Domain.Companies;
+﻿
+using Domain.Entities.Companies;
 
-namespace Domain.Users
+namespace Domain.Entities.Users
 {
     public partial class User : BaseEntity<int>
     {

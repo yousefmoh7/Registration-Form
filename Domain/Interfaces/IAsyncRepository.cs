@@ -1,4 +1,4 @@
-﻿using Domain.Base;
+﻿using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -19,9 +19,11 @@ namespace Domain.Interfaces
         Task<T> GetAsync(Expression<Func<T, bool>> expression);
 
         Task<T> GetAsyncById(int id);
+        Task<T> GetAsyncById(int id, params Expression<Func<T, object>>[] includes);
 
-        Task<List<T>> ListAsync(Expression<Func<T, bool>> expression);
         Task<List<T>> ListAsync();
+        Task<List<T>> ListAsync(Expression<Func<T, bool>> expression);
+
         Task<int> SaveChangesAsync();
 
     }

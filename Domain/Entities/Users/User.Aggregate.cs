@@ -1,8 +1,7 @@
-﻿namespace Domain.Users
+﻿namespace Domain.Entities.Users
 {
     public partial class User
     {
-
         public void Update(string name
               , string address
               , string email

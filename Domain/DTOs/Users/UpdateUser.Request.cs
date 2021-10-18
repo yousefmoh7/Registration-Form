@@ -21,6 +21,7 @@ namespace Domain.DTOs.Users
         public string Password { get; set; }
 
         [StringLength(255)]
+        [EmailAddress]
         public string Email { get; set; }
 
         [Required]

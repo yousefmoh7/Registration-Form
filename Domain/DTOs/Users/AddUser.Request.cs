@@ -10,6 +10,7 @@ namespace Domain.DTOs.Users
 
         [Required]
         [StringLength(50)]
+        [EmailAddress]
         public string Email { get; set; }
 
         [Required]

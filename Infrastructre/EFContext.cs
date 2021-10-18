@@ -1,5 +1,5 @@
-﻿using Domain.Companies;
-using Domain.Users;
+﻿using Domain.Entities.Companies;
+using Domain.Entities.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data

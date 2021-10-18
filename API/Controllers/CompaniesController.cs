@@ -1,6 +1,6 @@
 ﻿using Domain.DTOs.Compaines;
 using Domain.DTOs.Companies;
-using Infrastructre.Services.Compaines;
+using Infrastructre.Services.Companies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
@@ -38,9 +38,9 @@ namespace API.Controllers
         }
 
         [HttpGet()]
-        public async Task<IActionResult> Get([FromQuery] GetCompanyRequest request)
+        public async Task<IActionResult> Get()
         {
-            var compaines = await _service.SearchAsync(request);
+            var compaines = await _service.GetAllCompaniesAsync();
             return Ok(compaines);
         }
 

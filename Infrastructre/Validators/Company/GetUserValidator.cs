@@ -1,9 +1,7 @@
-﻿using Domain.Companies;
-using Domain.DTOs.Companies;
-using Domain.DTOs.Users;
+﻿using Domain.DTOs.Companies;
+using Domain.Entities.Companies;
 using Domain.Interfaces;
 using Domain.Shared;
-using Domain.Users;
 using FluentValidation;
 using System.Threading;
 using System.Threading.Tasks;

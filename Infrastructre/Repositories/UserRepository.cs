@@ -1,6 +1,8 @@
-﻿using Domain.Users;
+﻿using Domain.Entities.Users;
+using Domain.Interfaces;
+using Infrastructure.Data;
 
-namespace Infrastructure.Data.Repositories
+namespace Infrastructre.Repositories
 {
     public class UserRepository : RepositoryBase<User>
         , IUserRepository

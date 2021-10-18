@@ -1,6 +1,8 @@
-﻿using Domain.Companies;
+﻿using Domain.Entities.Companies;
+using Domain.Interfaces;
+using Infrastructure.Data;
 
-namespace Infrastructure.Data.Repositories
+namespace Infrastructre.Repositories
 {
     public class CompanyRepository : RepositoryBase<Company>
         , ICompanyRepository

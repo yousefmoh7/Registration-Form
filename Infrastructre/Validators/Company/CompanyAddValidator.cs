@@ -1,5 +1,4 @@
-﻿using Domain.Companies;
-using Domain.DTOs.Compaines;
+﻿using Domain.DTOs.Compaines;
 using Domain.Interfaces;
 using Domain.Shared;
 using FluentValidation;
@@ -10,9 +9,9 @@ namespace Infrastructre.Validators
 {
     public class CompanyAddValidator : AbstractValidator<AddCompanyRequest>
     {
-        readonly IAsyncRepository<Company> _companyRepository;
+        readonly ICompanyRepository _companyRepository;
 
-        public CompanyAddValidator(IAsyncRepository<Company> companyRepository)
+        public CompanyAddValidator(ICompanyRepository companyRepository)
         {
             _companyRepository = companyRepository;
             RuleFor(c => c.Name).MustAsync(ValidateCompany)
@@ -20,7 +19,7 @@ namespace Infrastructre.Validators
                 .WithMessage(c => ValidationErrorMessages.ErrorCompanyNameAlreadyExist(c.Name));
 
             RuleFor(c => c.Address)
-                   .Must(c => c.Length > 5)
+                   .Must(c => c.Length >= 5)
                    .WithErrorCode(ValidatorErrorCodes.BadRequest)
                    .WithMessage(ValidationErrorMessages.ErrorCompanyAddress);
 

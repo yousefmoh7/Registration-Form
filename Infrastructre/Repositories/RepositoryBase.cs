@@ -1,5 +1,6 @@
-﻿using Domain.Base;
+﻿using Domain.Entities;
 using Domain.Interfaces;
+using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Data.Repositories
+namespace Infrastructre.Repositories
 {
     public class RepositoryBase<T> : IAsyncRepository<T> where T : BaseEntity
     {
@@ -37,8 +38,24 @@ namespace Infrastructure.Data.Repositories
             return _dbSet.FirstOrDefaultAsync(expression);
         }
 
+        //public async Task<T> GetAsyncById(int id, string[] paths = null)
+        //{
+        //    var model = await _dbSet.FindAsync(id);
+        //    foreach (var path in paths)
+        //    {
+        //        _dbContext.Entry(model).Reference(path).Load();
+        //    }
+        //    return model;
+        //}
+
         public async Task<T> GetAsyncById(int id)
         {
+            return await _dbSet.FindAsync(id);
+        }
+
+        public async Task<T> GetAsyncById(int id, params Expression<Func<T, object>>[] includes)
+        {
+            includes.ToList().ForEach(x => _dbSet.Include(x).Load());
             return await _dbSet.FindAsync(id);
         }
 

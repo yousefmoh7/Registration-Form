@@ -1,6 +1,5 @@
-﻿using Domain.Companies;
-using Domain.DTOs.Compaines;
-using Domain.DTOs.Companies;
+﻿using Domain.DTOs.Companies;
+using Domain.Entities.Companies;
 using Domain.Interfaces;
 using Domain.Shared;
 using FluentValidation;
@@ -9,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructre.Validators
 {
- 
+
     public class CompanyUpdateValidator : AbstractValidator<UpdateCompanyRequest>
     {
         readonly IAsyncRepository<Company> _companyRepository;
@@ -20,7 +19,8 @@ namespace Infrastructre.Validators
             RuleFor(c => c.Id).MustAsync(ValidateCompanyIsExist)
            .WithErrorCode(ValidatorErrorCodes.NotFound)
            .WithMessage(c => ValidationErrorMessages.ErrorCompanyIsNotExist(c.Id))
-           .DependentRules(() => {
+           .DependentRules(() =>
+           {
 
                RuleFor(c => c).MustAsync(ValidateCompanyName)
                  .WithErrorCode(ValidatorErrorCodes.BadRequest)
@@ -40,7 +40,7 @@ namespace Infrastructre.Validators
         {
             //var x= _companyRepository.IsExistAsync(x => x.Name == company.Name && x.Id != company.Id);
 
-            return ! (await _companyRepository.IsExistAsync(x => x.Name == company.Name && x.Id != company.Id));
+            return !(await _companyRepository.IsExistAsync(x => x.Name == company.Name && x.Id != company.Id));
         }
 
         public async Task<bool> ValidateCompanyIsExist(int id, CancellationToken token)

@@ -1,8 +1,6 @@
-﻿using Domain.Base;
-using Domain.Users;
+﻿using Domain.Entities.Users;
 using System.Collections.Generic;
-
-namespace Domain.Companies
+namespace Domain.Entities.Companies
 {
     public partial class Company : BaseEntity<int>
     {
@@ -16,14 +14,6 @@ namespace Domain.Companies
         {
             Update(name, address, description);
         }
-
-        public void Update(string name, string address, string description)
-        {
-            Name = name;
-            Description = description;
-            Address = address;
-        }
-
 
     }
 }

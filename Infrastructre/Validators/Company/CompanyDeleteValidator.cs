@@ -1,6 +1,5 @@
-﻿using Domain.Companies;
-using Domain.DTOs.Compaines;
-using Domain.DTOs.Companies;
+﻿using Domain.DTOs.Companies;
+using Domain.Entities.Companies;
 using Domain.Interfaces;
 using Domain.Shared;
 using FluentValidation;
@@ -12,22 +11,21 @@ namespace Infrastructre.Validators
     public class CompanyDeleteValidator : AbstractValidator<DeleteCompanyRequest>
     {
         readonly IAsyncRepository<Company> _companyRepository;
-        public static string ErrorCompanyIsNotExist(int id) => $"Company with id :{id} does not exist ";
 
         public CompanyDeleteValidator(IAsyncRepository<Company> companyRepository)
         {
             _companyRepository = companyRepository;
             RuleFor(c => c.Id).MustAsync(ValidateCompanyIsExist)
               .WithErrorCode(ValidatorErrorCodes.NotFound)
-              .WithMessage(c => ErrorCompanyIsNotExist(c.Id))
+              .WithMessage(c => ValidationErrorMessages.ErrorCompanyIsNotExist(c.Id))
                .DependentRules(() =>
                {
                    RuleFor(c => c.Id).MustAsync(ValidateCompanyHaveUsers)
                        .WithErrorCode(ValidatorErrorCodes.BadRequest)
-                       .WithMessage(c => ErrorCompanyIsNotExist(c.Id));
+                       .WithMessage(c => ValidationErrorMessages.ErrorCompanyHaveUsers);
                });
 
-               }
+        }
 
         public async Task<bool> ValidateCompanyIsExist(int id, CancellationToken token)
         {
@@ -36,11 +34,8 @@ namespace Infrastructre.Validators
 
         public async Task<bool> ValidateCompanyHaveUsers(int id, CancellationToken token)
         {
-            var xx = (await _companyRepository.GetAsyncById(id));
-             return (await _companyRepository.GetAsyncById(id)).Users.Count > 0;            
+            var xx = (await _companyRepository.GetAsyncById(id, x => x.Users)).Users.Count;
+            return (await _companyRepository.GetAsyncById(id, x => x.Users)).Users.Count == 0;
         }
-
-
-
     }
 }

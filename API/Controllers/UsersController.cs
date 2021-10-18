@@ -30,9 +30,9 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get([FromQuery] GetUserRequest request)
+        public async Task<IActionResult> Get()
         {
-            var users = await _service.SearchAsync(request);
+            var users = await _service.GetAllUsersAsync();
             return Ok(users);
         }
 

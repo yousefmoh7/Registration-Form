@@ -1,6 +1,6 @@
-﻿using Domain.Interfaces;
+﻿using Domain.Entities.Companies;
 
-namespace Domain.Companies
+namespace Domain.Interfaces
 {
     public interface ICompanyRepository : IAsyncRepository<Company>
     {

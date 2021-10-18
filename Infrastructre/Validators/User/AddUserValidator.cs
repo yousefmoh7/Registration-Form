@@ -1,8 +1,7 @@
-﻿using Domain.Companies;
-using Domain.DTOs.Users;
+﻿using Domain.DTOs.Users;
+using Domain.Entities.Companies;
 using Domain.Interfaces;
 using Domain.Shared;
-using Domain.Users;
 using FluentValidation;
 using Infrastructre.ValidatorExtentions;
 using System.Threading;
@@ -12,10 +11,10 @@ namespace Infrastructre.Validators
 {
     public class AddUserValidator : AbstractValidator<AddUserRequest>
     {
-        readonly IAsyncRepository<User> _userRepository;
+        readonly IUserRepository _userRepository;
         readonly IAsyncRepository<Company> _companyRepository;
 
-        public AddUserValidator(IAsyncRepository<User> userRepository, IAsyncRepository<Company> companyRepository)
+        public AddUserValidator(IUserRepository userRepository, IAsyncRepository<Company> companyRepository)
         {
             _userRepository = userRepository;
             _companyRepository = companyRepository;
@@ -26,7 +25,7 @@ namespace Infrastructre.Validators
 
             RuleFor(c => c.Email).MustAsync(ValidateUserEmail)
                                  .WithErrorCode(ValidatorErrorCodes.BadRequest)
-                                 .WithMessage(c => ValidationErrorMessages.ErrorEmailAlreadyTaken(c.Email)).DependentRules(()=>
+                                 .WithMessage(c => ValidationErrorMessages.ErrorEmailAlreadyTaken(c.Email)).DependentRules(() =>
                                  {
                                      RuleFor(c => c.Password).Must(ValidatiorExtentions.ValidatePassword)
                                                             .WithErrorCode(ValidatorErrorCodes.BadRequest)
@@ -37,7 +36,7 @@ namespace Infrastructre.Validators
 
         public async Task<bool> ValidateUserEmail(string email, CancellationToken token)
         {
-            return !await _userRepository.IsExistAsync(x => x.Email == email);
+            return !(await _userRepository.IsExistAsync(x => x.Email == email));
         }
 
         public async Task<bool> ValidateCompanyIsExist(int id, CancellationToken token)

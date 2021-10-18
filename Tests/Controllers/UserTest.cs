@@ -19,7 +19,7 @@ namespace Tests
         [Fact]
         public async void GetUserbyId()
         {
-            var userInfo = new UserInfoDTO
+            var userInfo = new UserInfo
             {
                 Id = 1,
                 Name = "name"
@@ -28,7 +28,7 @@ namespace Tests
             UsersController controller = new(logger.Object, userService.Object);
             var result = await controller.GetById(1);
             var okResult = result as OkObjectResult;
-            var user = okResult.Value as UserInfoDTO;
+            var user = okResult.Value as UserInfo;
 
             // assert
             Assert.NotNull(okResult);

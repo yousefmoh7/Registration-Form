@@ -1,25 +1,22 @@
-﻿
-
-using Domain.Companies;
-using Domain.DTOs.Compaines;
+﻿using Domain.DTOs.Compaines;
 using Domain.DTOs.Companies;
+using Domain.Entities.Companies;
 using Domain.Interfaces;
 using FluentValidation;
 using Infrastructre.ValidatorExtentions;
-using Infrastructre.Validators;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Infrastructre.Services.Compaines
+namespace Infrastructre.Services.Companies
 {
     public interface ICompanyService
     {
-        public Task<AddCompanyResponse> AddNewCompany(AddCompanyRequest model);
+        public Task<CompanyInfo> AddNewCompany(AddCompanyRequest model);
         public Task<CompanyInfo> UpdateCompany(UpdateCompanyRequest model, int id);
         public Task<CompanyInfo> GetCompany(int id);
         public Task DeleteCompany(int id);
-        public Task<List<CompanyInfo>> SearchAsync(GetCompanyRequest request);
+        public Task<List<CompanyInfo>> GetAllCompaniesAsync();
 
     }
     public class CompanyService : ICompanyService
@@ -30,7 +27,7 @@ namespace Infrastructre.Services.Compaines
         private readonly IValidator<CompanyBaseRequest> _companyGetValidator;
         private readonly IValidator<DeleteCompanyRequest> _companyDeleteValidator;
 
-        
+
         public CompanyService(
             ICompanyRepository companyRepository,
             IValidator<UpdateCompanyRequest> companyUpdateValidator,
@@ -47,7 +44,7 @@ namespace Infrastructre.Services.Compaines
 
         }
 
-        public async Task<AddCompanyResponse> AddNewCompany(AddCompanyRequest model)
+        public async Task<CompanyInfo> AddNewCompany(AddCompanyRequest model)
         {
 
             await _companyAddValidator.ValidateAndThrowEx(model);
@@ -56,10 +53,12 @@ namespace Infrastructre.Services.Compaines
             await _companyRepository.AddAsync(company);
             await _companyRepository.SaveChangesAsync();
 
-            var response = new AddCompanyResponse()
+            var response = new CompanyInfo()
             {
                 Id = company.Id,
-                CompanyName = company.Name
+                Name = company.Name,
+                Address = company.Address,
+                Description = company.Description
             };
 
             return response;
@@ -67,10 +66,7 @@ namespace Infrastructre.Services.Compaines
 
         public async Task DeleteCompany(int id)
         {
-            //var validator = new CompanyDeleteValidator(_companyRepository);
-            //await validator.ValidateAndThrowEx(new DeleteCompanyRequest { Id = id });
             await _companyDeleteValidator.ValidateAndThrowEx(new DeleteCompanyRequest { Id = id });
-
             var entity = await _companyRepository.GetAsyncById(id);
             await _companyRepository.DeleteAsync(entity);
             await _companyRepository.SaveChangesAsync();
@@ -91,7 +87,7 @@ namespace Infrastructre.Services.Compaines
             };
         }
 
-        public async Task<List<CompanyInfo>> SearchAsync(GetCompanyRequest request)
+        public async Task<List<CompanyInfo>> GetAllCompaniesAsync()
         {
 
             var companies =
@@ -118,7 +114,7 @@ namespace Infrastructre.Services.Compaines
             //if (await _companyRepository.GetAsyncById(id) == null)
             //    throw new KeyNotFoundException("");
             company.Update(model.Name, model.Address, model.Description);
-            await  _companyRepository.UpdateAsync(company);
+            await _companyRepository.UpdateAsync(company);
             await _companyRepository.SaveChangesAsync();
 
             return new CompanyInfo
